@@ -152,7 +152,7 @@ ECR_REPOSITORY_URL: 123456789012.dkr.ecr.us-east-1.amazonaws.com/beauty-api
 **Cost:** Free (750 hours/month)
 **No Credit Card:** ✅ Yes!
 
-#### Step 1: Create Render Account (Free, No Card)
+#### Step 1: Create Render Account (Free, No Ca
 ```
 Go to https://render.com
 Sign up with GitHub or email
