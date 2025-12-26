@@ -25,14 +25,19 @@ RUN git clone https://github.com/Daniil-Osokin/lightweight-human-pose-estimation
 # Create checkpoints directory
 RUN mkdir -p /app/pifuhd/checkpoints
 
-# Download models (with fallback for robustness)
+# Download pose estimation model
 RUN cd /app/lightweight-human-pose-estimation.pytorch && \
-    wget -q https://download.01.org/opencv/openvino_training_extensions/models/human_pose_estimation/checkpoint_iter_370000.pth -O checkpoint_iter_370000.pth || echo "Warning: Pose model download failed"
+    wget -q https://download.01.org/opencv/openvino_training_extensions/models/human_pose_estimation/checkpoint_iter_370000.pth -O checkpoint_iter_370000.pth && \
+    echo "✓ Pose estimation model downloaded"
 
-# Note: PIFuHD model (~1.5GB) should be downloaded separately or mounted as a volume
-# This reduces initial Docker image size significantly
+# Download PIFuHD model (~1.5GB)
+# PIFuHD requires the trained model to function
+RUN cd /app/pifuhd/checkpoints && \
+    wget -q https://szyhuang.blob.core.windows.net/publicmodels/pifuhd.pt -O pifuhd.pt && \
+    echo "✓ PIFuHD model downloaded" || \
+    echo "⚠ Warning: PIFuHD model download may have issues - check internet connection"
 
-# Fix potential issues in pifuhd code
+# Fix potential issues in pifuhd code for PyTorch 2.x compatibility
 RUN sed -i "s/torch.load(state_dict_path, map_location=cuda)/torch.load(state_dict_path, map_location=cuda, weights_only=False)/g" /app/pifuhd/apps/recon.py 2>/dev/null || true
 
 # Set Python path to include both repositories
