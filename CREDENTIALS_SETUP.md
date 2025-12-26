@@ -146,7 +146,89 @@ ECR_REPOSITORY_URL: 123456789012.dkr.ecr.us-east-1.amazonaws.com/beauty-api
 
 ---
 
-### 3️⃣ Docker Hub - Simplest Option (No GPU)
+### 3️⃣ Render - NO CREDIT CARD (Recommended for Beginners)
+
+**Best For:** Learning, demos, projects without GPU needs
+**Cost:** Free (750 hours/month)
+**No Credit Card:** ✅ Yes!
+
+#### Step 1: Create Render Account (Free, No Card)
+```
+Go to https://render.com
+Sign up with GitHub or email
+```
+
+#### Step 2: Create Docker Hub Account (Required for images)
+```
+Go to https://hub.docker.com
+Sign up (free)
+Create username (e.g., "your-username")
+```
+
+#### Step 3: Push Docker Image to Docker Hub
+```bash
+# Login to Docker Hub
+docker login
+# Username: your-username
+# Password: (create access token at hub.docker.com/settings/security)
+
+# Build and push
+docker build -t your-username/beauty-api:latest .
+docker push your-username/beauty-api:latest
+```
+
+#### Step 4: Deploy on Render
+```
+1. Go to render.com dashboard
+2. Click "New +" → "Web Service"
+3. Choose "Docker image"
+4. Image URL: your-username/beauty-api:latest
+5. Name: beauty-api
+6. Plan: Free
+7. Region: Choose closest to you
+8. Deploy!
+9. Wait 5-10 minutes for build
+10. Click the generated URL to access
+```
+
+#### Step 5: Access Your API
+```bash
+# Health check
+curl https://beauty-api.onrender.com/health
+
+# Interactive docs
+https://beauty-api.onrender.com/docs
+
+# Test processing (will be slow without GPU)
+curl -X POST "https://beauty-api.onrender.com/process" \
+  -F "front_image=@front.jpg" \
+  -F "side_image=@side.jpg"
+```
+
+#### What You Need to Save:
+```
+DOCKER_USERNAME: your-username
+DOCKER_ACCESS_TOKEN: dckr_... (KEEP SECRET!)
+RENDER_URL: https://beauty-api.onrender.com
+```
+
+#### ⚠️ Known Limitation:
+- **No GPU** on free tier = **SLOW processing** (5-10 min per image)
+- Processing without GPU is CPU-only, will take much longer
+- **Free tier:** 750 hours/month (about 1 month continuous)
+- **Paid tier starts at:** $7/month (still no GPU in basic plans)
+
+#### To Add GPU Later:
+```
+If you upgrade to Render's paid plans or switch to:
+- Linode GPU ($50/month)
+- Vultr GPU ($60/month)
+- Google Cloud ($300 free credit if you get a card later)
+```
+
+---
+
+### 4️⃣ Docker Hub - For Storing Images
 
 #### Step 1: Create Docker Hub Account
 ```
